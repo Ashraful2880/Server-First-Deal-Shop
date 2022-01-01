@@ -25,6 +25,7 @@ app.use(express.json());
         const Products = database.collection("Products");
         const OrderCollections = database.collection("Orders");
         const blogs = database.collection("Blogs");
+        const teams=database.collection("Teams")
 
 
 
@@ -51,11 +52,11 @@ app.use(express.json());
           res.send(AllBlogs)
         }); 
               
-        //<------------ Get User Rating Data From Database ------------->
+        //<------------ Get Team Data From Database ------------->
 
-        app.get('/ratings',async(req,res)=>{
-          const getUserRatings=await ratingCollection.find({}).toArray();
-          res.send(getUserRatings)
+        app.get('/about',async(req,res)=>{
+          const ourTeams=await teams.find({}).toArray();
+          res.send(ourTeams)
         }); 
 
         //<------------ Get Payment From User And Send to DB ------------->
