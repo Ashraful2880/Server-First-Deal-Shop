@@ -27,6 +27,7 @@ async function run() {
     const Products = database.collection("Products");
     const OrderCollections = database.collection("Orders");
     const blogs = database.collection("Blogs");
+    const brands = database.collection("Brands");
     const teams = database.collection("Teams");
 
     //<------------ Get All Products ------------->
@@ -69,6 +70,13 @@ async function run() {
     app.get("/blogs", async (req, res) => {
       const AllBlogs = await blogs.find({}).toArray();
       res.send(AllBlogs);
+    });
+
+    //<------------ Get All Brands ------------->
+
+    app.get("/brands", async (req, res) => {
+      const allBrands = await brands.find({}).toArray();
+      res.send(allBrands);
     });
 
     //<------------ Get Team Data From Database ------------->
