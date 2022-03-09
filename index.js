@@ -126,7 +126,6 @@ async function run() {
         value_c: "ref003_C",
         value_d: "ref004_D",
       };
-      console.log(productInfo);
       const result = await OrderCollections.insertOne(productInfo);
       const sslcommer = new SSLCommerzPayment(
         process.env.STORE_ID,
@@ -135,7 +134,6 @@ async function run() {
       ); //true for live default false for sandbox
       sslcommer.init(productInfo).then((data) => {
         res.json(data.GatewayPageURL);
-
         const orderInfo = { ...productInfo, ...data };
         if (orderInfo.GatewayPageURL) {
           res.json(orderInfo.GatewayPageURL);
@@ -148,16 +146,14 @@ async function run() {
     });
 
     app.post("/success", async (req, res) => {
-      console.log(req.body);
-      res.status(200).json(req.body);
+      res.redirect(`http://localhost:3000/success`);
+      res.json(productInfo.success_url);
     });
     app.post("/fail", async (req, res) => {
-      console.log(req.body);
-      res.status(400).json(req.body);
+      res.redirect(`http://localhost:3000/fail`);
     });
     app.post("/cancel", async (req, res) => {
-      console.log(req.body);
-      res.status(200).json(req.body);
+      res.redirect(`http://localhost:3000/cancel`);
     });
 
     //<------------ Get Payment From User And Send to DB ------------->
