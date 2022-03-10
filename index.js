@@ -89,15 +89,17 @@ async function run() {
       res.send(ourTeams);
     });
 
+    // Initialize payment
     app.post("/init", async (req, res) => {
       const productInfo = {
         total_amount: req.body.total_amount,
-        currency: "USD",
+        currency: "BDT",
         tran_id: uuidv4(),
         success_url: "http://localhost:5000/success",
-        fail_url: "http://localhost:5000/fail",
+        fail_url: "http://localhost:5000/failure",
         cancel_url: "http://localhost:5000/cancel",
         ipn_url: "http://localhost:5000/ipn",
+        paymentStatus: "pending",
         shipping_method: "Courier",
         product_name: req.body.product_name,
         product_category: "Electronic",
@@ -126,17 +128,19 @@ async function run() {
         value_c: "ref003_C",
         value_d: "ref004_D",
       };
+
+      // Insert order info
       const result = await OrderCollections.insertOne(productInfo);
+
       const sslcommer = new SSLCommerzPayment(
         process.env.STORE_ID,
         process.env.STORE_PASSWORD,
         false
-      ); //true for live default false for sandbox
+      );
       sslcommer.init(productInfo).then((data) => {
-        res.json(data.GatewayPageURL);
-        const orderInfo = { ...productInfo, ...data };
-        if (orderInfo.GatewayPageURL) {
-          res.json(orderInfo.GatewayPageURL);
+        const info = { ...productInfo, ...data };
+        if (info.GatewayPageURL) {
+          res.json(info.GatewayPageURL);
         } else {
           return res.status(400).json({
             message: "SSL session was not successful",
@@ -144,16 +148,18 @@ async function run() {
         }
       });
     });
-
     app.post("/success", async (req, res) => {
       res.redirect(`http://localhost:3000/success`);
-      res.json(productInfo.success_url);
     });
-    app.post("/fail", async (req, res) => {
+    app.post("/failure", async (req, res) => {
       res.redirect(`http://localhost:3000/fail`);
     });
     app.post("/cancel", async (req, res) => {
       res.redirect(`http://localhost:3000/cancel`);
+    });
+    app.post("/ipn", (req, res) => {
+      console.log(req.body);
+      res.send(req.body);
     });
 
     //<------------ Get Payment From User And Send to DB ------------->
