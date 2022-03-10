@@ -173,22 +173,30 @@ async function run() {
       res.redirect(`http://localhost:3000/cancel`);
     });
     app.post("/ipn", (req, res) => {
-      console.log(req.body);
       res.send(req.body);
     });
 
     app.get("/orders/:tran_id", async (req, res) => {
       const id = req.params.tran_id;
       const order = await OrderCollections.findOne({ tran_id: id });
-      console.log(order);
       res.json(order);
     });
-    //<------------ Get Payment From User And Send to DB ------------->
 
-    app.post("/pay", async (req, res) => {
-      const receiveOrder = req.body;
-      const result = await OrderCollections.insertOne(receiveOrder);
-      res.json(result);
+    app.post("/validate", async (req, res) => {
+      const order = await OrderCollections.findOne({
+        tran_id: req.body.tran_id,
+      });
+      if (order.val_id === req.body.val_id) {
+        const update = await OrderCollections.updateOne(
+          { tran_id: req.body.tran_id },
+          {
+            $set: { paymentStatus: "Successful" },
+          }
+        );
+        res.send(update.modifiedCount > 0);
+      } else {
+        res.send("Payment Not Confirmed, Discarted Order");
+      }
     });
   } finally {
     // await client.close();
