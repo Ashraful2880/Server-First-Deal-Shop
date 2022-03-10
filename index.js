@@ -89,7 +89,8 @@ async function run() {
       res.send(ourTeams);
     });
 
-    // Initialize payment
+    // Initialize Payment
+
     app.post("/init", async (req, res) => {
       const productInfo = {
         total_amount: req.body.total_amount,
@@ -149,12 +150,26 @@ async function run() {
       });
     });
     app.post("/success", async (req, res) => {
+      const order = await OrderCollections.updateOne(
+        { tran_id: req.body.tran_id },
+        {
+          $set: {
+            val_id: req.body.val_id,
+          },
+        }
+      );
       res.redirect(`http://localhost:3000/success`);
     });
     app.post("/failure", async (req, res) => {
+      const order = await OrderCollections.deleteOne({
+        tran_id: req.body.tran_id,
+      });
       res.redirect(`http://localhost:3000/fail`);
     });
     app.post("/cancel", async (req, res) => {
+      const order = await OrderCollections.deleteOne({
+        tran_id: req.body.tran_id,
+      });
       res.redirect(`http://localhost:3000/cancel`);
     });
     app.post("/ipn", (req, res) => {
