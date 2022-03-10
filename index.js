@@ -158,7 +158,7 @@ async function run() {
           },
         }
       );
-      res.redirect(`http://localhost:3000/success`);
+      res.redirect(`http://localhost:3000/success/${req.body.tran_id}`);
     });
     app.post("/failure", async (req, res) => {
       const order = await OrderCollections.deleteOne({
@@ -177,6 +177,12 @@ async function run() {
       res.send(req.body);
     });
 
+    app.get("/orders/:tran_id", async (req, res) => {
+      const id = req.params.tran_id;
+      const order = await OrderCollections.findOne({ tran_id: id });
+      console.log(order);
+      res.json(order);
+    });
     //<------------ Get Payment From User And Send to DB ------------->
 
     app.post("/pay", async (req, res) => {
