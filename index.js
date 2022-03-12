@@ -92,6 +92,7 @@ async function run() {
     // Initialize Payment
 
     app.post("/init", async (req, res) => {
+      console.log(req.body);
       const productInfo = {
         total_amount: req.body.total_amount,
         currency: "BDT",
@@ -109,13 +110,12 @@ async function run() {
         cus_name: req.body.cus_name,
         cus_email: req.body.cus_email,
         cus_add1: "Dhaka",
-        cus_add2: "Dhaka",
+        cus_street: "Dhaka",
         cus_city: "Dhaka",
         cus_state: "Dhaka",
         cus_postcode: "1000",
         cus_country: "Bangladesh",
         cus_phone: "01711111111",
-        cus_fax: "01711111111",
         ship_name: req.body.cus_name,
         ship_add1: "Dhaka",
         ship_add2: "Dhaka",
