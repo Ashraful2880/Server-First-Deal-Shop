@@ -92,43 +92,42 @@ async function run() {
     // Initialize Payment
 
     app.post("/init", async (req, res) => {
-      console.log(req.body);
       const productInfo = {
-        total_amount: req.body.total_amount,
         currency: "BDT",
+        paymentStatus: "pending",
         tran_id: uuidv4(),
         success_url: "https://safe-bastion-76919.herokuapp.com/success",
         fail_url: "https://safe-bastion-76919.herokuapp.com/failure",
         cancel_url: "https://safe-bastion-76919.herokuapp.com/cancel",
         ipn_url: "https://safe-bastion-76919.herokuapp.com/ipn",
-        paymentStatus: "pending",
-        shipping_method: "Courier",
         product_name: req.body.product_name,
-        product_category: "Electronic",
+        product_category: "test",
         product_profile: req.body.product_profile,
         product_image: req.body.product_image,
+        productDetails: req.body.productDetails,
+        total_amount: req.body.total_amount,
         cus_name: req.body.cus_name,
         cus_email: req.body.cus_email,
-        cus_add1: "Dhaka",
-        cus_street: "Dhaka",
-        cus_city: "Dhaka",
-        cus_state: "Dhaka",
-        cus_postcode: "1000",
-        cus_country: "Bangladesh",
-        cus_phone: "01711111111",
+        cus_add1: req.body.cus_add1,
+        cus_street: req.body.cus_street,
+        cus_city: req.body.city,
+        cus_state: req.body.cus_state,
+        cus_postcode: req.body.cus_postcode,
+        cus_country: req.body.cus_country,
+        cus_phone: req.body.cus_phone,
+        shipping_method: "Courier",
         ship_name: req.body.cus_name,
-        ship_add1: "Dhaka",
-        ship_add2: "Dhaka",
-        ship_city: "Dhaka",
-        ship_state: "Dhaka",
-        ship_postcode: 1000,
-        ship_country: "Bangladesh",
+        ship_add1: req.body.cus_add1,
+        ship_add2: req.body.cus_add1,
+        ship_city: req.body.cus_city,
+        ship_state: req.body.cus_state,
+        ship_postcode: req.body.cus_postcode,
+        ship_country: req.body.cus_country,
         multi_card_name: "mastercard",
         value_a: "ref001_A",
         value_b: "ref002_B",
         value_c: "ref003_C",
         value_d: "ref004_D",
-        productDetails: req.body.productDetails,
       };
 
       // Insert order info
@@ -150,6 +149,9 @@ async function run() {
         }
       });
     });
+
+    //<----------- Success, Fail, Cancel And APN API Here ---------->
+
     app.post("/success", async (req, res) => {
       const order = await OrderCollections.updateOne(
         { tran_id: req.body.tran_id },
@@ -178,13 +180,14 @@ async function run() {
     app.post("/ipn", (req, res) => {
       res.send(req.body);
     });
-
+    //<---------- Ger Payment Complete Details -------->
     app.get("/orders/:tran_id", async (req, res) => {
       const id = req.params.tran_id;
       const order = await OrderCollections.findOne({ tran_id: id });
       res.json(order);
     });
 
+    //<---------- Validate Transaction By User clicking Success Button -------->
     app.post("/validate", async (req, res) => {
       const order = await OrderCollections.findOne({
         tran_id: req.body.tran_id,
