@@ -168,14 +168,14 @@ async function run() {
       const order = await OrderCollections.deleteOne({
         tran_id: req.body.tran_id,
       });
-      res.redirect(`http://localhost:3000/fail`);
+      res.redirect(`http://localhost:3000/placeOrder`);
     });
 
     app.post("/cancel", async (req, res) => {
       const order = await OrderCollections.deleteOne({
         tran_id: req.body.tran_id,
       });
-      res.redirect(`http://localhost:3000/cancel`);
+      res.redirect(`http://localhost:3000/`);
     });
     app.post("/ipn", (req, res) => {
       res.send(req.body);
