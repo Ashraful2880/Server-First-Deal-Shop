@@ -40,6 +40,16 @@ async function run() {
       res.send(FindProducts);
     });
 
+    //<------------ Get All Products by Category ------------->
+
+    app.get("/findProducts", async (req, res) => {
+      const search = req.query.category;
+      console.log("search", search);
+      const result = await Products.find({ category: search }).toArray();
+      res.send(result);
+      console.log("Found one", result);
+    });
+
     //<--------- Get Top trending Products ---------->
 
     app.get("/topTrending", async (req, res) => {
