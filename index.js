@@ -44,10 +44,11 @@ async function run() {
 
     app.get("/findProducts", async (req, res) => {
       const search = req.query.category;
-      console.log("search", search);
-      const result = await Products.find({ category: search }).toArray();
-      res.send(result);
-      console.log("Found one", result);
+      const products = await Products.find({}).toArray();
+      const findProducts = products?.filter((value) =>
+        value?.category?.includes(search)
+      );
+      res.send(findProducts);
     });
 
     //<--------- Get Top trending Products ---------->
