@@ -70,6 +70,16 @@ async function run() {
       res.send(result);
     });
 
+    //<--------- Get New Arrival Products ---------->
+
+    app.get("/newArrival", async (req, res) => {
+      const newArrival = req.query;
+      const result = await Products.find({
+        slug: newArrival.newArrival,
+      }).toArray();
+      res.send(result);
+    });
+
     //<------------ Find Products Information For Cart ------------->
 
     app.get("/addToCart/:id", async (req, res) => {
