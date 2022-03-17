@@ -182,21 +182,23 @@ async function run() {
           },
         }
       );
-      res.redirect(`http://localhost:3000/success/${req.body.tran_id}`);
+      res.redirect(
+        `http://localhost:3000/success/${req.body.tran_id} || https://first-deal-shop.netlify.app/success/${req.body.tran_id}`
+      );
     });
 
     app.post("/failure", async (req, res) => {
       const order = await OrderCollections.deleteOne({
         tran_id: req.body.tran_id,
       });
-      res.redirect(`http://localhost:3000/placeOrder`);
+      res.redirect(`https://first-deal-shop.netlify.app/placeOrder`);
     });
 
     app.post("/cancel", async (req, res) => {
       const order = await OrderCollections.deleteOne({
         tran_id: req.body.tran_id,
       });
-      res.redirect(`http://localhost:3000/`);
+      res.redirect(`https://first-deal-shop.netlify.app/`);
     });
     app.post("/ipn", (req, res) => {
       res.send(req.body);
