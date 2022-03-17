@@ -183,7 +183,8 @@ async function run() {
         }
       );
       res.redirect(
-        `http://localhost:3000/success/${req.body.tran_id} || https://first-deal-shop.netlify.app/success/${req.body.tran_id}`
+        `http://localhost:3000/success/${req.body.tran_id}` ||
+          `https://first-deal-shop.netlify.app/success/${req.body.tran_id}`
       );
     });
 
